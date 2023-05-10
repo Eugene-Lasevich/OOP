@@ -9,8 +9,8 @@ class User():
         self.host = host
         self.port = port
 
-    def became_server(self):
-        self.server = server.Server(self.host, self.port)
+    def became_server(self, host, port):
+        self.server = server.Server(host, port)
         self.server.start_run()
         print(f"{self.username} is now a server")
 
