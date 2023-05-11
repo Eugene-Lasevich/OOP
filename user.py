@@ -4,18 +4,22 @@ import time
 
 
 class User():
-    def __init__(self, username, host, port):
+    def __init__(self, username):
         self.username = username
-        self.host = host
-        self.port = port
+        self._is_server = False
+        self._is_client = False
+        # self.host = host
+        # self.port = port
 
-    def became_server(self, host, port):
-        self.server = server.Server(host, port)
+    def became_server(self, host, port, window):
+        self.server = server.Server(host, port, window)
+        self._is_server = True
         self.server.start_run()
         print(f"{self.username} is now a server")
 
-    def became_client(self):
-        self.client = client.Client(self.username, self.host, self.port)
+    def became_client(self, host, port):
+        self.client = client.Client(self.username, host, port)
+        self._is_client = True
         print(f"{self.username} is now a client")
 
     def request_users(self):
@@ -33,6 +37,12 @@ class User():
 
     def disconnect_from_server(self):
         pass
+
+    def is_server(self):
+        return self._is_server
+
+    def is_client(self):
+        return self._is_client
 
 
 if __name__ == "__main__":
