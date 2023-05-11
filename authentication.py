@@ -6,7 +6,7 @@ import threading
 
 
 class Authentication(Tk):
-    def __init__(self):
+    def __init__(self, msg = ""):
         super().__init__()
 
         self.host = ""
@@ -15,6 +15,10 @@ class Authentication(Tk):
 
         self.title("Authentication")
         self.geometry("300x150")
+
+        if len(msg):
+            self.msg_label = ttk.Label(self, text=msg, font=20)
+            self.msg_label.place(relx=0.05, rely=0.1, width=300, height=25)
 
         self.host_label = ttk.Label(self, text="Host:", font=20)
         self.port_label = ttk.Label(self, text="Port:", font=20)

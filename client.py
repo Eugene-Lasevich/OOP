@@ -7,33 +7,17 @@ import message
 class Client:
     UDP_MAX_SIZE = 65535
 
-    COMMANDS = (
-        '/members',
-        '/connect',
-        '/exit',
-        '/help',
-    )
-
-    HELP_TEXT = """
-    /members - get active members
-    /connect <client> - connect to member
-    /exit - disconnect from client
-    /help - show this message
-    """
-
     def __init__(self, username: str, host: str = '127.0.0.1', port: int = 3000):
         self.host = host
         self.port = port
         self.username = username
         self.my_socket = MySocket()
-        self.my_socket.my_bind(host, 0)
+        self.my_socket.my_bind(host, port)
         # self.own_port = self.my_socket.my_getsockname()[1]
         self.listen_thread = None
-        self.sendto = (host, port)
+        self.sendto = None
         self.allowed_ports = [port]
         self.data_from_server = None
-
-
 
     def listen(self):
         while True:
