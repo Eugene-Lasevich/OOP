@@ -2,6 +2,7 @@ import threading
 import time
 from my_socket import *
 import message
+import queue
 
 
 class Client:
@@ -18,11 +19,15 @@ class Client:
         self.sendto = None
         self.allowed_ports = [port]
         self.data_from_server = None
+        self.window = None
+        self.my_queue = queue.Queue()
 
     def listen(self):
         while True:
             msg, addr = self.my_socket.my_recvfrom(self.UDP_MAX_SIZE)
             self.data_from_server = msg
+            self.my_queue.put(str(msg))
+
             msg_port = addr[-1]
             allowed_ports = self.listen_thread.allowed_ports
             if msg_port not in allowed_ports:
@@ -32,7 +37,7 @@ class Client:
                 continue
 
             else:
-
+                self.my_queue.put(str(msg))
                 print('\r\r' + str(msg) + '\n' + f'you: ', end='')
 
     def start_listen(self):
@@ -50,9 +55,9 @@ class Client:
         time.sleep(0.01)
         return dict(self.data_from_server)
 
-    def send_message(self):
-        print("you:", end='\t')
-        msg = message.Message(self.username, input())
+    def send_message(self, text):
+        self.my_queue.put(f"you: {text}")
+        msg = message.Message(self.username, text)
         self.my_socket.my_sendto(msg, self.sendto)
 
     def connect_by_name(self, username: str):
