@@ -11,11 +11,11 @@ class User():
         # self.host = host
         # self.port = port
 
-    def became_server(self, host, port, window):
-        self.server = server.Server(host, port, window)
-        self._is_server = True
-        self.server.start_run()
-        print(f"{self.username} is now a server")
+    # def became_server(self, host, port, window=None):
+    #     self.server = server.Server(host, port, window)
+    #     self._is_server = True
+    #     self.server.start_run()
+    #     print(f"{self.username} is now a server")
 
     def became_client(self, host, port):
         self.client = client.Client(self.username, host, port)
@@ -25,6 +25,10 @@ class User():
     def request_users(self):
         self.client.get_members()
         print(self.client.data_from_server)
+        if self.client.data_from_server:
+            return self.client.data_from_server
+        else:
+            return
 
     def connect_to_user_by_name(self, username: str):
         self.client.connect_by_name(username)
@@ -43,17 +47,3 @@ class User():
 
     def is_client(self):
         return self._is_client
-
-
-if __name__ == "__main__":
-    user1 = User("Eugene", "127.0.0.1", 6500)
-    user1.became_client()
-    user1.connect("127.0.0.1", 3002)
-    user1.client.connect_by_name('qwerty')
-    counter = 0
-    while counter < 5:
-        user1.client.send_message()
-        counter += 1
-
-    user1.client.connect("127.0.0.1", 3002)
-    user1.client.connect_by_name('qwerty')
