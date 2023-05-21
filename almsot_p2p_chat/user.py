@@ -1,6 +1,4 @@
-import client
-import server
-import time
+from almsot_p2p_chat import client
 
 
 class User():
@@ -11,11 +9,7 @@ class User():
         # self.host = host
         # self.port = port
 
-    # def became_server(self, host, port, window=None):
-    #     self.server = server.Server(host, port, window)
-    #     self._is_server = True
-    #     self.server.start_run()
-    #     print(f"{self.username} is now a server")
+
 
     def became_client(self, host, port):
         self.client = client.Client(self.username, host, port)

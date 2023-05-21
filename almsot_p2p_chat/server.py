@@ -1,4 +1,4 @@
-from my_socket import *
+from almsot_p2p_chat.my_socket import *
 import threading
 import queue
 
