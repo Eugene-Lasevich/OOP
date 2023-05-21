@@ -75,25 +75,20 @@ class Client:
         else:
             print(f'Failed to connect')
 
-    def disconect_from_server(self):
-        self.my_socket.my_sendto(('__exit', self.username), self.sendto)
+
 
     def find_username_port(self, port: int):
-        self.get_members()
+        b = self.get_members()
         a = dict(self.data_from_server)
         for key, val in a.items():
             if val[1] == port:
                 return key
 
     def disconect_from_client(self):
-        try:
 
-            peer_port = self.sendto[-1]
-            self.find_username_port(peer_port)
-            self.allowed_ports.remove(peer_port)
-            self.sendto = (self.host, self.port)
-            print(f'Disconnect from client:{self.find_username_port(peer_port)}')
-
-
-        finally:
-            print('-' * 50)
+        # peer_port = self.sendto[-1]
+        # self.find_username_port(peer_port)
+        # self.allowed_ports.remove(peer_port)
+        self.sendto = ("127.0.0.1", 3000)
+        # self.listen_thread.join()
+        # print(f'Disconnect from client:{self.find_username_port(peer_port)}')

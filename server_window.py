@@ -51,18 +51,17 @@ class ChatWindow(tk.Tk):
             self.append_text(message)
         self.after(100, self.update_label)
 
-        # window_thread = threading.Thread(target=self.mainloop)
-        # window_thread.start()
-        # self.mainloop()
-
     def append_text(self, text):
+        if "__join" in text or "__member" in text:
+            return
         self.scrolled_text.configure(state="normal")
         self.scrolled_text.insert(tk.END, text + '\n')
         self.scrolled_text.see(tk.END)
         self.scrolled_text.configure(state="disabled")
 
     def click_exit_btn(self):
-        pass
+        self.client.disconect_from_client()
+        self.destroy()
 
     def click_send_btn(self):
         self.text = self.msg_editor.get()
