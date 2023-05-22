@@ -3,6 +3,8 @@ import time
 from my_socket import *
 import message
 import queue
+import os
+import pickle
 
 
 class Client:
@@ -21,13 +23,12 @@ class Client:
         self.data_from_server = None
         self.window = None
         self.my_queue = queue.Queue()
+        self.client_connections = {}
 
     def listen(self):
         while True:
             msg, addr = self.my_socket.my_recvfrom(self.UDP_MAX_SIZE)
             self.data_from_server = msg
-            self.my_queue.put(str(msg))
-
             msg_port = addr[-1]
             allowed_ports = self.listen_thread.allowed_ports
             if msg_port not in allowed_ports:
@@ -38,6 +39,7 @@ class Client:
 
             else:
                 self.my_queue.put(str(msg))
+                self.client_connections[self.key_connection].append(msg)
                 print('\r\r' + str(msg) + '\n' + f'you: ', end='')
 
     def start_listen(self):
@@ -58,6 +60,7 @@ class Client:
     def send_message(self, text):
         self.my_queue.put(f"you: {text}")
         msg = message.Message(self.username, text)
+        self.client_connections[self.key_connection].append(msg)
         self.my_socket.my_sendto(msg, self.sendto)
 
     def connect_by_name(self, username: str):
@@ -66,6 +69,25 @@ class Client:
         time.sleep(0.001)
         if dict(self.data_from_server).get(username):
             addr = dict(self.data_from_server).get(username)
+            self.key_connection = f"{self.username}-{username}"
+            self.client_connections.setdefault(self.key_connection)
+            self.client_connections[self.key_connection] = list()
+
+            if os.path.isfile(self.key_connection):
+                with open(self.key_connection, 'rb') as file:
+                    print("Ok "*50)
+                    deserialized_message = pickle.load(file)
+                    print(deserialized_message)
+                    for i in deserialized_message:
+                        self.client_connections[self.key_connection].append(i)
+                        if i.sender == self.username:
+                            self.my_queue.put(f"you: {i.text}")
+                        else:
+                            self.my_queue.put(str(i))
+
+            with open(self.key_connection, 'wb') as file:
+                pass
+
             host = addr[0]
             port = addr[1]
             peer_port = port
@@ -74,8 +96,6 @@ class Client:
             print(f'Connect to client: {username}')
         else:
             print(f'Failed to connect')
-
-
 
     def find_username_port(self, port: int):
         b = self.get_members()
@@ -86,9 +106,6 @@ class Client:
 
     def disconect_from_client(self):
 
-        # peer_port = self.sendto[-1]
-        # self.find_username_port(peer_port)
-        # self.allowed_ports.remove(peer_port)
         self.sendto = ("127.0.0.1", 3000)
-        # self.listen_thread.join()
-        # print(f'Disconnect from client:{self.find_username_port(peer_port)}')
+        with open(self.key_connection, 'wb') as file:
+            pickle.dump(self.client_connections.get(self.key_connection), file)

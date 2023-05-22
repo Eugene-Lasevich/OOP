@@ -22,11 +22,11 @@ if name:
 else:
     exit(0)
 
-a = Authentication("Enter your address")
-a.wait_window()
-client_host, client_port = a.return_data()
+# a = Authentication("Enter your address")
+# a.wait_window()
+# client_host, client_port = a.return_data()
 if (client_host != server_host or client_port != server_port) and not user1.is_client():
-    user1.became_client(client_host, int(client_port))
+    user1.became_client("127.0.0.1", 3002)
     user1.connect("127.0.0.1", 3000)
 
 root = Tk()
@@ -60,8 +60,9 @@ def click_connect_users_btn():
         con = username_editor.get()
         if users.get(con):
             connect.set(f"connect to {con}")
-            host, port = users.get(con)
-            user1.connect(host, int(port))
+            # host, port = users.get(con)
+            # user1.connect(host, int(port))
+            user1.connect_to_user_by_name(con)
             start_chat_btn.place(relx=0.05, rely=0.7, width=425, height=45)
         else:
             print("qwqqqqqqqqqqqqq")
@@ -74,7 +75,6 @@ def click_start_chat_btn():
     global chat_window
     chat_window = ChatWindow(user1.client)
     chat_window.mainloop()
-    print(chat_window)
 
 
 username_label = ttk.Label(text=f"Username: {name}", font=25)
@@ -82,7 +82,8 @@ connect_label = ttk.Label(text=f"Connect :{connect}", font=25, textvariable=conn
 
 request_users_btn = ttk.Button(text="Request users", command=click_request_users_btn)
 connect_user_btn = ttk.Button(text="Connect", command=click_connect_users_btn)
-username_editor = ttk.Entry(font=30, )
+username_editor = ttk.Entry(font=30)
+username_editor.insert(0,   "Igor")
 start_chat_btn = ttk.Button(text="Start chat", command=click_start_chat_btn)
 
 username_label.place(relx=0.05, rely=0.01, width=200, height=35)
