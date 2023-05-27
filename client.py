@@ -24,6 +24,7 @@ class Client:
         self.window = None
         self.my_queue = queue.Queue()
         self.client_connections = {}
+        self.key_connection = None
 
     def listen(self):
         while True:
@@ -107,5 +108,12 @@ class Client:
     def disconect_from_client(self):
 
         self.sendto = ("127.0.0.1", 3000)
-        with open(self.key_connection, 'wb') as file:
-            pickle.dump(self.client_connections.get(self.key_connection), file)
+        if self.key_connection:
+            with open(self.key_connection, 'wb') as file:
+                pickle.dump(self.client_connections.get(self.key_connection), file)
+
+    def disconect_from_server(self):
+        self.my_socket.my_sendto(('__exit', self.username), ("127.0.0.1", 3000))
+
+
+

@@ -16,10 +16,11 @@ class ServerWindow(tk.Tk):
         self.scrolled_text.configure(state="disabled")
 
     def append_text(self, text):
-        self.scrolled_text.configure(state="normal")
-        self.scrolled_text.insert(tk.END, text)
-        self.scrolled_text.see(tk.END)
-        self.scrolled_text.configure(state="disabled")
+        if text:
+            self.scrolled_text.configure(state="normal")
+            self.scrolled_text.insert(tk.END, str(text) + '\n')
+            self.scrolled_text.see(tk.END)
+            self.scrolled_text.configure(state="disabled")
 
 
 class ChatWindow(tk.Tk):
@@ -29,6 +30,7 @@ class ChatWindow(tk.Tk):
         self.geometry("500x500")
         self.text = ""
         self.client = client
+        # self.root = root
 
         self.scrolled_text = ScrolledText(self)
         # self.scrolled_text.pack(fill=tk.BOTH, expand=True)
@@ -36,10 +38,10 @@ class ChatWindow(tk.Tk):
         self.scrolled_text.place(relx=0.1, rely=0.1, width=400, height=250)
         self.msg_editor = tk.Entry(self)
 
-        self.exit_btn = tk.Button(self, text="exit", command=self.click_exit_btn)
+        # self.exit_btn = tk.Button(self, text="exit", command=self.click_exit_btn)
         self.send_btn = tk.Button(self, text="send", command=self.click_send_btn)
 
-        self.exit_btn.place(relx=0, rely=0.85, width=75, height=30)
+        # self.exit_btn.place(relx=0, rely=0.85, width=75, height=30)
         self.send_btn.place(relx=0.7, rely=0.85, width=100, height=30)
         self.msg_editor.place(relx=0.2, rely=0.85, width=200, height=30)
 
@@ -59,9 +61,11 @@ class ChatWindow(tk.Tk):
         self.scrolled_text.see(tk.END)
         self.scrolled_text.configure(state="disabled")
 
-    def click_exit_btn(self):
-        self.client.disconect_from_client()
-        self.destroy()
+    # def click_exit_btn(self):
+    #     self.client.disconect_from_client()
+    #     self.destroy()
+    #     self.root.deiconify()
+
 
     def click_send_btn(self):
         self.text = self.msg_editor.get()

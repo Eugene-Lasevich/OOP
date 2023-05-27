@@ -11,11 +11,6 @@ class User():
         # self.host = host
         # self.port = port
 
-    # def became_server(self, host, port, window=None):
-    #     self.server = server.Server(host, port, window)
-    #     self._is_server = True
-    #     self.server.start_run()
-    #     print(f"{self.username} is now a server")
 
     def became_client(self, host, port):
         self.client = client.Client(self.username, host, port)
@@ -24,7 +19,7 @@ class User():
 
     def request_users(self):
         self.client.get_members()
-        print(self.client.data_from_server)
+        print(f"data from server{self.client.data_from_server}")
         if self.client.data_from_server:
             return self.client.data_from_server
         else:
@@ -40,7 +35,7 @@ class User():
         pass
 
     def disconnect_from_server(self):
-        pass
+        self.client.disconect_from_server()
 
     def is_server(self):
         return self._is_server
