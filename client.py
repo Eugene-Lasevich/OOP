@@ -25,19 +25,23 @@ class Client:
         self.my_queue = queue.Queue()
         self.client_connections = {}
         self.key_connection = None
+        self.poshel_naher_flag = False
 
     def listen(self):
         while True:
             msg, addr = self.my_socket.my_recvfrom(self.UDP_MAX_SIZE)
             self.data_from_server = msg
             msg_port = addr[-1]
+
+            if msg == "Poshel naher":
+                self.poshel_naher_flag = True
+
             allowed_ports = self.listen_thread.allowed_ports
             if msg_port not in allowed_ports:
                 continue
 
             if not msg:
                 continue
-
             else:
                 self.my_queue.put(str(msg))
                 self.client_connections[self.key_connection].append(msg)
@@ -76,7 +80,7 @@ class Client:
 
             if os.path.isfile(self.key_connection):
                 with open(self.key_connection, 'rb') as file:
-                    print("Ok "*50)
+                    print("Ok " * 50)
                     deserialized_message = pickle.load(file)
                     print(deserialized_message)
                     for i in deserialized_message:
@@ -113,7 +117,5 @@ class Client:
                 pickle.dump(self.client_connections.get(self.key_connection), file)
 
     def disconect_from_server(self):
+        self.poshel_naher_flag = False
         self.my_socket.my_sendto(('__exit', self.username), ("127.0.0.1", 3000))
-
-
-

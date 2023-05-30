@@ -42,3 +42,6 @@ class User():
 
     def is_client(self):
         return self._is_client
+
+    def check_repeat_username(self):
+        return self.client.poshel_naher_flag

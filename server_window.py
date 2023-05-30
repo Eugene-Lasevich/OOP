@@ -21,6 +21,8 @@ class ServerWindow(tk.Tk):
             self.scrolled_text.insert(tk.END, str(text) + '\n')
             self.scrolled_text.see(tk.END)
             self.scrolled_text.configure(state="disabled")
+    def clear(self):
+        self.scrolled_text.delete(0, tk.END)
 
 
 class ChatWindow(tk.Tk):

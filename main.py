@@ -1,3 +1,5 @@
+import time
+import subprocess
 import server_window
 import user
 from tkinter import *
@@ -29,6 +31,10 @@ client_host, client_port = a.return_data()
 if (client_host != server_host or client_port != server_port) and not user1.is_client():
     user1.became_client(client_host, int(client_port))
     user1.connect("127.0.0.1", 3000)
+    time.sleep(0.1)
+    if (user1.check_repeat_username()):
+        # user1.disconnect_from_server()
+        exit(0)
 
 root = Tk()
 root.title("MainWindow")
@@ -37,6 +43,7 @@ root.geometry("500x250")
 
 def click_request_users_btn():
     sw = server_window.ServerWindow("Users")
+    # sw.clear()
     sw.append_text(user1.request_users())
 
     def close_window():
@@ -64,7 +71,7 @@ def click_connect_users_btn():
         host, port = a.return_data()
         if host and port:
             start_chat_btn.place(relx=0.05, rely=0.7, width=425, height=45)
-            user1.disconnect_from_server()
+            # user1.disconnect_from_server()
             user1.connect(host, int(port))
             connect_user_btn.configure(state="disabled")
 
@@ -75,7 +82,7 @@ def click_connect_users_btn():
         con = username_editor.get()
         if users.get(con):
             connect_var.set(f"connect to {con}")
-            user1.disconnect_from_server()
+            # user1.disconnect_from_server()
             user1.connect_to_user_by_name(con)
             connect_user_btn.configure(state="disabled")
             start_chat_btn.place(relx=0.05, rely=0.7, width=425, height=45)
